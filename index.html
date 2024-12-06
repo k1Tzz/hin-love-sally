@@ -132,25 +132,32 @@
             });
         }
 
-        // 選擇參加者
+        // 選擇或取消參加者
         let selectedParticipants = [];
         function selectParticipant(participant) {
-            if (!selectedParticipants.includes(participant)) {
+            if (selectedParticipants.includes(participant)) {
+                // 取消選擇，將其移除並返回到參加者名單
+                const index = selectedParticipants.indexOf(participant);
+                if (index > -1) {
+                    selectedParticipants.splice(index, 1);
+                    participants.push(participant); // 返回到原始名單
+                }
+            } else {
+                // 選擇參加者
                 selectedParticipants.push(participant);
-                // 從原始名單移除
                 const index = participants.indexOf(participant);
                 if (index > -1) {
-                    participants.splice(index, 1);
+                    participants.splice(index, 1); // 從原始名單移除
                 }
-                updateSelectedParticipants();
-                displayParticipants(); // 更新顯示的參加者名單
             }
+            updateSelectedParticipants();
+            displayParticipants(); // 更新顯示的參加者名單
         }
 
         // 更新已選擇的參加者顯示
         function updateSelectedParticipants() {
-            document.getElementById("selectedParticipants").innerText = 
-                `已選擇的參加者：\n${selectedParticipants.join('\n')}`;
+            const selectedList = document.getElementById("selectedParticipants");
+            selectedList.innerHTML = "<strong>已選擇的參加者：</strong><br>" + selectedParticipants.join('<br>'); // 更新顯示已選擇的參加者
             document.getElementById("results").innerHTML = ""; // 清空結果
         }
 
