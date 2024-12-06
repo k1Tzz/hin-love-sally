@@ -51,13 +51,21 @@
         }
         .participant {
             cursor: pointer;
-            color: black; /* Default text color for participants */
+            color: green; /* Change text color for participants to green */
             font-weight: bold; /* Make text bold */
             text-decoration: none; /* Remove underline */
         }
         .selectedParticipant {
-            color: green; /* Change color for selected participants to green */
+            color: red; /* Change color for selected participants to red */
             font-weight: bold; /* Keep text bold */
+        }
+        .group1 {
+            color: purple; /* Change Group 1 color to purple */
+            font-weight: bold; /* Make text bold */
+        }
+        .group2 {
+            color: blue; /* Change Group 2 color to blue */
+            font-weight: bold; /* Make text bold */
         }
         .participant:hover {
             color: #555; /* Change color on hover for better visibility */
@@ -71,9 +79,9 @@
     <div class="container">
         <h1>抽獎活動</h1>
         
-        <h2>敢死隊名單</h2> <!-- Changed heading -->
+        <h2>敢死隊名單</h2> <!-- Participants list -->
         <div id="participantList"></div>
-        <div id="selectedParticipants"><strong>被選擇的齊心協力：</strong></div> <!-- Changed heading -->
+        <div id="selectedParticipants"><strong>被選擇的齊心協力：</strong></div> <!-- Selected participants -->
         <button id="drawButton" onclick="drawLottery()" disabled>抽取參加者</button>
         
         <div id="results" class="results"></div>
@@ -104,7 +112,7 @@
             participantList.innerHTML = ""; // Clear current list
             participants.forEach(participant => {
                 const span = document.createElement("span");
-                span.className = "participant";
+                span.className = "participant"; // Apply green bold style
                 span.innerText = participant;
                 span.onclick = () => selectParticipant(participant);
                 participantList.appendChild(span);
@@ -128,10 +136,10 @@
 
         function updateSelectedParticipants() {
             const selectedList = document.getElementById("selectedParticipants");
-            selectedList.innerHTML = "<strong>被齊心協力選擇中的人類：</strong><br>"; // Updated heading
+            selectedList.innerHTML = "<strong>被選擇的齊心協力：</strong><br>"; // Updated heading
             selectedParticipants.forEach(participant => {
                 const span = document.createElement("span");
-                span.className = "selectedParticipant"; // Change class to apply green color
+                span.className = "selectedParticipant"; // Change class to apply red color
                 span.innerText = participant;
                 // Allow clicking on selected participants to remove them
                 span.onclick = () => selectParticipant(participant);
@@ -154,9 +162,11 @@
             const group1 = shuffledParticipants.slice(0, midIndex);
             const group2 = shuffledParticipants.slice(midIndex);
 
-            document.getElementById("results").innerHTML = `
-                <div>刀不鋒利馬太瘦組：<br>${group1.join('<br>')}</div>
-                <div>我卢本伟没有开挂組：<br>${group2.join('<br>')}</div>
+            // Update the result display with appropriate styles
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = `
+                <div class="group1">刀不鋒利馬太瘦組：<br>${group1.map(name => `<span class="group1">${name}</span>`).join('<br>')}</div>
+                <div class="group2">我卢本伟没有开挂組：<br>${group2.map(name => `<span class="group2">${name}</span>`).join('<br>')}</div>
             `;
         }
 
