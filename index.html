@@ -20,12 +20,12 @@
             color: #4CAF50;
         }
         .container {
-            text-align: left; /* 使文字靠左對齊 */
+            text-align: left;
             background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 500px; /* 調整寬度 */
+            width: 500px;
         }
         button {
             padding: 10px 20px;
@@ -35,7 +35,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px; /* 增加上邊距 */
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -47,18 +47,23 @@
         }
         #selectedParticipants {
             margin-top: 20px;
-            white-space: pre-line; /* 允許換行 */
+            white-space: pre-line;
         }
         .participant {
             cursor: pointer;
-            color: #007BFF;
-            text-decoration: underline;
+            color: black; /* Default text color for participants */
+            font-weight: bold; /* Make text bold */
+            text-decoration: none; /* Remove underline */
+        }
+        .selectedParticipant {
+            color: green; /* Change color for selected participants to green */
+            font-weight: bold; /* Keep text bold */
         }
         .participant:hover {
-            color: #0056b3;
+            color: #555; /* Change color on hover for better visibility */
         }
         #secondResult {
-            margin-top: 20px; /* 增加第二次抽獎結果的上邊距 */
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -66,62 +71,37 @@
     <div class="container">
         <h1>抽獎活動</h1>
         
-        <!-- 固定名字區域 -->
-        <h2>參加者名單</h2>
+        <h2>敢死隊名單</h2> <!-- Changed heading -->
         <div id="participantList"></div>
-        <div id="selectedParticipants"><strong>已選擇的參加者：</strong></div>
-        <button onclick="drawLottery()">抽取參加者</button>
+        <div id="selectedParticipants"><strong>被選擇的齊心協力：</strong></div> <!-- Changed heading -->
+        <button id="drawButton" onclick="drawLottery()" disabled>抽取參加者</button>
         
-        <!-- 隨機分配組別 -->
         <div id="results" class="results"></div>
         
-        <!-- 固定地圖名區域 -->
         <div class="second-draw" id="secondDrawSection">
             <h2>抽取地圖</h2>
-            <div id="mapList"></div>
-            <button onclick="drawSecondLottery()">抽取地圖</button>
+            <button id="mapButton" onclick="drawSecondLottery()">抽取地圖</button>
             <div id="secondResult"></div>
         </div>
     </div>
 
     <script>
-        // 固定參加者名單（更新後）
         const participants = [
-            "Ch1ckenNut",
-            "HAMISH1112",
-            "hucolus",
-            "hhhin.0626",
-            "JY",
-            "KEVIN5566",
-            "MERMERMER",
-            "MONEY",
-            "PRX something",
-            "Sawakaze1015",
-            "W1NGGGGG",
-            "YEKINDER",
-            "醉愛TikLee鎖匙扣",
-            "醉愛黑狗鎖匙扣"
+            "Ch1ckenNut", "HAMISH1112", "hucolus", "hhhin.0626", "JY",
+            "KEVIN5566", "MERMERMER", "MONEY", "PRX something",
+            "Sawakaze1015", "W1NGGGGG", "YEKINDER", "醉愛TikLee鎖匙扣", "醉愛黑狗鎖匙扣"
         ];
 
-        // 固定地圖名單
         const maps = [
-            "Abyss",
-            "Ascent",
-            "Bind",
-            "Breeze",
-            "Fracture",
-            "Haven",
-            "Icebox",
-            "Lotus",
-            "Pearl",
-            "Split",
-            "Sunset"
+            "Abyss", "Ascent", "Bind", "Breeze", "Fracture", 
+            "Haven", "Icebox", "Lotus", "Pearl", "Split", "Sunset"
         ];
 
-        // 顯示參加者名單
+        let selectedParticipants = [];
+
         function displayParticipants() {
             const participantList = document.getElementById("participantList");
-            participantList.innerHTML = ""; // 清空現有名單
+            participantList.innerHTML = ""; // Clear current list
             participants.forEach(participant => {
                 const span = document.createElement("span");
                 span.className = "participant";
@@ -132,43 +112,43 @@
             });
         }
 
-        // 選擇或取消參加者
-        let selectedParticipants = [];
         function selectParticipant(participant) {
             if (selectedParticipants.includes(participant)) {
-                // 取消選擇，將其移除並返回到參加者名單
-                const index = selectedParticipants.indexOf(participant);
-                if (index > -1) {
-                    selectedParticipants.splice(index, 1);
-                    participants.push(participant); // 返回到原始名單
-                }
+                // Deselect participant (remove from selected)
+                selectedParticipants = selectedParticipants.filter(p => p !== participant);
+                participants.push(participant); // Return to original list
             } else {
-                // 選擇參加者
+                // Select participant
                 selectedParticipants.push(participant);
-                const index = participants.indexOf(participant);
-                if (index > -1) {
-                    participants.splice(index, 1); // 從原始名單移除
-                }
+                participants.splice(participants.indexOf(participant), 1); // Remove from original list
             }
             updateSelectedParticipants();
-            displayParticipants(); // 更新顯示的參加者名單
+            displayParticipants(); // Update displayed participant list
         }
 
-        // 更新已選擇的參加者顯示
         function updateSelectedParticipants() {
             const selectedList = document.getElementById("selectedParticipants");
-            selectedList.innerHTML = "<strong>已選擇的參加者：</strong><br>" + selectedParticipants.join('<br>'); // 更新顯示已選擇的參加者
-            document.getElementById("results").innerHTML = ""; // 清空結果
+            selectedList.innerHTML = "<strong>被齊心協力選擇中的人類：</strong><br>"; // Updated heading
+            selectedParticipants.forEach(participant => {
+                const span = document.createElement("span");
+                span.className = "selectedParticipant"; // Change class to apply green color
+                span.innerText = participant;
+                // Allow clicking on selected participants to remove them
+                span.onclick = () => selectParticipant(participant);
+                selectedList.appendChild(span);
+                selectedList.appendChild(document.createElement("br"));
+            });
+            
+            // Enable or disable the draw button based on selection
+            document.getElementById("drawButton").disabled = selectedParticipants.length === 0;
         }
 
-        // 抽取參加者並隨機分配組別
         function drawLottery() {
             if (selectedParticipants.length === 0) {
                 alert("請選擇至少一位參加者！");
                 return;
             }
 
-            // 隨機分配到兩個組
             const shuffledParticipants = selectedParticipants.sort(() => 0.5 - Math.random());
             const midIndex = Math.ceil(shuffledParticipants.length / 2);
             const group1 = shuffledParticipants.slice(0, midIndex);
@@ -180,15 +160,13 @@
             `;
         }
 
-        // 抽取地圖
         function drawSecondLottery() {
             const selectedMap = maps[Math.floor(Math.random() * maps.length)];
             document.getElementById("secondResult").innerText = `抽中的地圖：\n${selectedMap}`;
         }
 
-        // 初始化
+        // Initialize
         displayParticipants();
-        document.getElementById("mapList").innerText = maps.join('\n');
     </script>
 </body>
 </html>
