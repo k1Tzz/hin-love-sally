@@ -25,7 +25,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 400px; /* 調整寬度 */
+            width: 500px; /* 調整寬度 */
         }
         textarea {
             padding: 15px; /* 增加內邊距 */
@@ -33,7 +33,7 @@
             width: 100%;
             font-size: 16px; /* 增加字體大小 */
             box-sizing: border-box; /* 包含內邊距和邊框 */
-            height: 330px; /* 增加高度，使之更大 */
+            height: 150px; /* 增加高度，使之更大 */
             resize: none; /* 禁止調整大小 */
         }
         button {
@@ -44,6 +44,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px; /* 增加上邊距 */
         }
         button:hover {
             background-color: #45a049;
@@ -53,7 +54,7 @@
             justify-content: space-between;
             margin-top: 20px;
         }
-        #result, #remaining {
+        #group1, #group2 {
             width: 45%;
             text-align: left;
             white-space: pre-line; /* 允許換行 */
@@ -62,17 +63,34 @@
             color: red;
             margin-top: 10px;
         }
+        .second-draw {
+            margin-top: 20px; /* 增加第二次抽獎的上邊距 */
+        }
+        #secondResult {
+            margin-top: 20px; /* 增加第二次抽獎結果的上邊距 */
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>輸入名字</h1>
+        <h1>抽獎活動</h1>
+        
+        <!-- 名字輸入區域 -->
+        <h2>輸入名字參加抽獎</h2>
         <textarea id="nameInput" placeholder="請輸入名字，每行一個"></textarea>
         <button onclick="drawLottery()">抽取名單</button>
         <div id="error"></div>
         <div class="results">
-            <div id="result"></div>
-            <div id="remaining"></div>
+            <div id="group1"></div>
+            <div id="group2"></div>
+        </div>
+        
+        <!-- 地圖輸入區域 -->
+        <div class="second-draw" id="secondDrawSection">
+            <h2>抽取地圖</h2>
+            <textarea id="secondInput" placeholder="請輸入地圖名稱，每行一個"></textarea>
+            <button onclick="drawSecondLottery()">抽取地圖</button>
+            <div id="secondResult"></div>
         </div>
     </div>
 
@@ -83,32 +101,35 @@
             
             if (names.length > 10) {
                 document.getElementById("error").innerText = `錯誤：你輸入了 ${names.length} 個名字，最多只能輸入 10 個。`;
-                document.getElementById("result").innerText = "";
-                document.getElementById("remaining").innerText = "";
+                document.getElementById("group1").innerText = "";
+                document.getElementById("group2").innerText = "";
                 return;
             } else {
                 document.getElementById("error").innerText = ""; // 清除錯誤消息
             }
 
-            if (names.length < 5) {
-                document.getElementById("result").innerText = "請至少輸入五個名字！";
-                document.getElementById("remaining").innerText = "";
+            // 隨機分配到兩個組
+            const shuffledNames = names.sort(() => 0.5 - Math.random());
+            const midIndex = Math.ceil(shuffledNames.length / 2);
+            const group1 = shuffledNames.slice(0, midIndex);
+            const group2 = shuffledNames.slice(midIndex);
+
+            document.getElementById("group1").innerText = `刀不鋒利馬太瘦組：\n${group1.join('\n')}`;
+            document.getElementById("group2").innerText = `我卢本伟没有开挂組：\n${group2.join('\n')}`;
+        }
+
+        function drawSecondLottery() {
+            const secondInput = document.getElementById("secondInput").value;
+            const maps = secondInput.split('\n').map(map => map.trim()).filter(map => map);
+            
+            if (maps.length < 1) {
+                document.getElementById("secondResult").innerText = "請至少輸入一個地圖！";
                 return;
             }
 
-            const selectedNames = [];
-            while (selectedNames.length < 5) {
-                const randomIndex = Math.floor(Math.random() * names.length);
-                const selectedName = names[randomIndex];
-                if (!selectedNames.includes(selectedName)) {
-                    selectedNames.push(selectedName);
-                }
-            }
+            const selectedMap = maps[Math.floor(Math.random() * maps.length)];
 
-            const remainingNames = names.filter(name => !selectedNames.includes(name));
-
-            document.getElementById("result").innerText = `刀不鋒利馬太瘦組：\n${selectedNames.join('\n')}`;
-            document.getElementById("remaining").innerText = `我卢本伟没有开挂組：\n${remainingNames.join('\n')}`;
+            document.getElementById("secondResult").innerText = `抽中的地圖：\n${selectedMap}`;
         }
     </script>
 </body>
