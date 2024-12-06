@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽獎活動</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px; /* 調整寬度 */
+        }
+        textarea {
+            padding: 15px; /* 增加內邊距 */
+            margin: 10px 0;
+            width: 100%;
+            font-size: 16px; /* 增加字體大小 */
+            box-sizing: border-box; /* 包含內邊距和邊框 */
+            height: 330px; /* 增加高度，使之更大 */
+            resize: none; /* 禁止調整大小 */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        #result, #remaining {
+            width: 45%;
+            text-align: left;
+            white-space: pre-line; /* 允許換行 */
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>輸入名字</h1>
+        <textarea id="nameInput" placeholder="請輸入名字，每行一個"></textarea>
+        <button onclick="drawLottery()">抽取名單</button>
+        <div id="error"></div>
+        <div class="results">
+            <div id="result"></div>
+            <div id="remaining"></div>
+        </div>
+    </div>
+
+    <script>
+        function drawLottery() {
+            const input = document.getElementById("nameInput").value;
+            const names = input.split('\n').map(name => name.trim()).filter(name => name);
+            
+            if (names.length > 10) {
+                document.getElementById("error").innerText = `錯誤：你輸入了 ${names.length} 個名字，最多只能輸入 10 個。`;
+                document.getElementById("result").innerText = "";
+                document.getElementById("remaining").innerText = "";
+                return;
+            } else {
+                document.getElementById("error").innerText = ""; // 清除錯誤消息
+            }
+
+            if (names.length < 5) {
+                document.getElementById("result").innerText = "請至少輸入五個名字！";
+                document.getElementById("remaining").innerText = "";
+                return;
+            }
+
+            const selectedNames = [];
+            while (selectedNames.length < 5) {
+                const randomIndex = Math.floor(Math.random() * names.length);
+                const selectedName = names[randomIndex];
+                if (!selectedNames.includes(selectedName)) {
+                    selectedNames.push(selectedName);
+                }
+            }
+
+            const remainingNames = names.filter(name => !selectedNames.includes(name));
+
+            document.getElementById("result").innerText = `刀不鋒利馬太瘦組：\n${selectedNames.join('\n')}`;
+            document.getElementById("remaining").innerText = `我卢本伟没有开挂組：\n${remainingNames.join('\n')}`;
+        }
+    </script>
+</body>
+</html>
