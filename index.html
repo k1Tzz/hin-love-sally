@@ -51,28 +51,28 @@
         }
         .participant {
             cursor: pointer;
-            color: green; /* Change text color for participants to green */
-            font-weight: bold; /* Make text bold */
-            text-decoration: none; /* Remove underline */
+            color: green;
+            font-weight: bold;
+            text-decoration: none;
         }
         .selectedParticipant {
-            color: red; /* Change color for selected participants to red */
-            font-weight: bold; /* Keep text bold */
+            color: red;
+            font-weight: bold;
         }
         .group1 {
-            color: rgb(37, 149, 253); /* Change Group 1 color to black */
-            font-weight: bold; /* Make text bold */
+            color: rgb(37, 149, 253);
+            font-weight: bold;
         }
         .group2 {
-            color: rgb(234, 27, 241); /* Change Group 2 color to black */
-            font-weight: bold; /* Make text bold */
+            color: rgb(234, 27, 241);
+            font-weight: bold;
         }
         .mapResult {
-            color: black; /* Change map result color to black */
-            font-weight: bold; /* Make text bold */
+            color: black;
+            font-weight: bold;
         }
         .participant:hover {
-            color: #555; /* Change color on hover for better visibility */
+            color: #555;
         }
         #secondResult {
             margin-top: 20px;
@@ -83,9 +83,9 @@
     <div class="container">
         <h1>抽獎活動</h1>
         
-        <h2>敢死隊名單</h2> <!-- Participants list -->
+        <h2>敢死隊名單</h2>
         <div id="participantList"></div>
-        <div id="selectedParticipants"><strong>被齊心協力選擇中人類：</strong></div> <!-- Selected participants -->
+        <div id="selectedParticipants"><strong>被齊心協力選擇中人類：</strong></div>
         <button id="drawButton" onclick="drawLottery()" disabled>抽取參加者</button>
         
         <div id="results" class="results"></div>
@@ -93,7 +93,7 @@
         <div class="second-draw" id="secondDrawSection">
             <h2>抽取地圖</h2>
             <button id="mapButton" onclick="drawSecondLottery()">抽取地圖</button>
-            <div id="secondResult" class="mapResult"></div> <!-- Apply black bold style here -->
+            <div id="secondResult" class="mapResult"></div>
         </div>
     </div>
 
@@ -105,17 +105,17 @@
         ];
 
         const maps = [
-            "Abyss" - "蓮華古城",
-"Ascent" - "日落之城",
-"Bind" - "深海遺珠",
-"Breeze" - "天漠之峽",
-"Fracture" - "熱帶樂園",
-"Haven" - "極地寒港",
-"Icebox" - "劫境之地",
-"Lotus" - "遺落境地",
-"Pearl" - "雙塔迷城",
-"Split" - "義境空島",
-"Sunset" - "日落之城"
+            "Abyss - 蓮華古城",
+            "Ascent - 日落之城",
+            "Bind - 深海遺珠",
+            "Breeze - 天漠之峽",
+            "Fracture - 熱帶樂園",
+            "Haven - 極地寒港",
+            "Icebox - 劫境之地",
+            "Lotus - 遺落境地",
+            "Pearl - 雙塔迷城",
+            "Split - 義境空島",
+            "Sunset - 日落之城"
         ];
 
         let selectedParticipants = [];
@@ -125,7 +125,7 @@
             participantList.innerHTML = ""; // Clear current list
             participants.forEach(participant => {
                 const span = document.createElement("span");
-                span.className = "participant"; // Apply green bold style
+                span.className = "participant";
                 span.innerText = participant;
                 span.onclick = () => selectParticipant(participant);
                 participantList.appendChild(span);
@@ -135,7 +135,7 @@
 
         function selectParticipant(participant) {
             if (selectedParticipants.includes(participant)) {
-                // Deselect participant (remove from selected)
+                // Deselect participant
                 selectedParticipants = selectedParticipants.filter(p => p !== participant);
                 participants.push(participant); // Return to original list
             } else {
@@ -149,18 +149,16 @@
 
         function updateSelectedParticipants() {
             const selectedList = document.getElementById("selectedParticipants");
-            selectedList.innerHTML = "<strong>被齊心協力選擇中人類：</strong><br>"; // Updated heading
+            selectedList.innerHTML = "<strong>被齊心協力選擇中人類：</strong><br>";
             selectedParticipants.forEach(participant => {
                 const span = document.createElement("span");
-                span.className = "selectedParticipant"; // Change class to apply red color
+                span.className = "selectedParticipant";
                 span.innerText = participant;
-                // Allow clicking on selected participants to remove them
-                span.onclick = () => selectParticipant(participant);
+                span.onclick = () => selectParticipant(participant); // Allow removal
                 selectedList.appendChild(span);
                 selectedList.appendChild(document.createElement("br"));
             });
-            
-            // Enable or disable the draw button based on selection
+            // Enable or disable the draw button
             document.getElementById("drawButton").disabled = selectedParticipants.length === 0;
         }
 
@@ -175,7 +173,7 @@
             const group1 = shuffledParticipants.slice(0, midIndex);
             const group2 = shuffledParticipants.slice(midIndex);
 
-            // Update the result display with appropriate styles
+            // Display results
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = `
                 <div class="mapResult">刀不鋒利馬太瘦組：<br>${group2.map(name => `<span class="group1">${name}</span>`).join('<br>')}</div>
