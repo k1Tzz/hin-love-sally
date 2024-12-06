@@ -176,7 +176,7 @@
 
         function drawSecondLottery() {
             const selectedMap = maps[Math.floor(Math.random() * maps.length)];
-            document.getElementById("secondResult").innerText = `抽中的地圖：\n${selectedMap}`;
+            document.getElementById("secondResult").innerText = `抽中的地圖：\n<span class="participant">${selectedMap}`;
         }
 
         // Initialize
