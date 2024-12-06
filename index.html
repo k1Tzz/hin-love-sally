@@ -169,14 +169,14 @@
             // Update the result display with appropriate styles
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = `
-                刀不鋒利馬太瘦組：<br>${group2.map(name => `<span class="group1">${name}</span>`).join('<br>')}</div>
-                我卢本伟没有开挂組：<br>${group1.map(name => `<span class="group2">${name}</span>`).join('<br>')}</div>
+                <div class="mapResult">刀不鋒利馬太瘦組：<br>${group2.map(name => `<span class="group1">${name}</span>`).join('<br>')}</div>
+                <div class="mapResult">我卢本伟没有开挂組：<br>${group1.map(name => `<span class="group2">${name}</span>`).join('<br>')}</div>
             `;
         }
 
         function drawSecondLottery() {
             const selectedMap = maps[Math.floor(Math.random() * maps.length)];
-            document.getElementById("secondResult").innerText = `抽中的地圖：<span class="participant">\n${selectedMap}`;
+            document.getElementById("secondResult").innerText = `抽中的地圖：\n${selectedMap}`;
         }
 
         // Initialize
