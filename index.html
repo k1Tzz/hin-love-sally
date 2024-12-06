@@ -27,15 +27,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 500px; /* 調整寬度 */
         }
-        textarea {
-            padding: 15px; /* 增加內邊距 */
-            margin: 10px 0;
-            width: 100%;
-            font-size: 16px; /* 增加字體大小 */
-            box-sizing: border-box; /* 包含內邊距和邊框 */
-            height: 150px; /* 增加高度，使之更大 */
-            resize: none; /* 禁止調整大小 */
-        }
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -54,17 +45,17 @@
             justify-content: space-between;
             margin-top: 20px;
         }
-        #group1, #group2 {
-            width: 45%;
-            text-align: left;
+        #selectedParticipants {
+            margin-top: 20px;
             white-space: pre-line; /* 允許換行 */
         }
-        #error {
-            color: red;
-            margin-top: 10px;
+        .participant {
+            cursor: pointer;
+            color: #007BFF;
+            text-decoration: underline;
         }
-        .second-draw {
-            margin-top: 20px; /* 增加第二次抽獎的上邊距 */
+        .participant:hover {
+            color: #0056b3;
         }
         #secondResult {
             margin-top: 20px; /* 增加第二次抽獎結果的上邊距 */
@@ -75,62 +66,122 @@
     <div class="container">
         <h1>抽獎活動</h1>
         
-        <!-- 名字輸入區域 -->
-        <h2>輸入名字參加抽獎</h2>
-        <textarea id="nameInput" placeholder="請輸入名字，每行一個"></textarea>
-        <button onclick="drawLottery()">抽取名單</button>
-        <div id="error"></div>
-        <div class="results">
-            <div id="group1"></div>
-            <div id="group2"></div>
-        </div>
+        <!-- 固定名字區域 -->
+        <h2>參加者名單</h2>
+        <div id="participantList"></div>
+        <div id="selectedParticipants"><strong>已選擇的參加者：</strong></div>
+        <button onclick="drawLottery()">抽取參加者</button>
         
-        <!-- 地圖輸入區域 -->
+        <!-- 隨機分配組別 -->
+        <div id="results" class="results"></div>
+        
+        <!-- 固定地圖名區域 -->
         <div class="second-draw" id="secondDrawSection">
             <h2>抽取地圖</h2>
-            <textarea id="secondInput" placeholder="請輸入地圖名稱，每行一個"></textarea>
+            <div id="mapList"></div>
             <button onclick="drawSecondLottery()">抽取地圖</button>
             <div id="secondResult"></div>
         </div>
     </div>
 
     <script>
+        // 固定參加者名單
+        const participants = [
+        "Ch1ckenNut",
+            "HAMISH1112",
+            "hucolus",
+            "hhhin.0626",
+            "JY",
+            "KEVIN5566",
+            "MERMERMER",
+            "MONEY",
+            "PRX something",
+            "Sawakaze1015",
+            "W1NGGGGG",
+            "YEKINDER",
+            "醉愛TikLee鎖匙扣",
+            "醉愛黑狗鎖匙扣"
+        ];
+
+        // 固定地圖名單
+        const maps = [
+            "Abyss",
+            "Ascent",
+            "Bind",
+            "Breeze",
+            "Fracture",
+            "Haven",
+            "Icebox",
+            "Lotus",
+            "Pearl",
+            "Split",
+            "Sunset"
+        ];
+
+        // 顯示參加者名單
+        function displayParticipants() {
+            const participantList = document.getElementById("participantList");
+            participantList.innerHTML = ""; // 清空現有名單
+            participants.forEach(participant => {
+                const span = document.createElement("span");
+                span.className = "participant";
+                span.innerText = participant;
+                span.onclick = () => selectParticipant(participant);
+                participantList.appendChild(span);
+                participantList.appendChild(document.createElement("br"));
+            });
+        }
+
+        // 選擇參加者
+        let selectedParticipants = [];
+        function selectParticipant(participant) {
+            if (!selectedParticipants.includes(participant)) {
+                selectedParticipants.push(participant);
+                // 從原始名單移除
+                const index = participants.indexOf(participant);
+                if (index > -1) {
+                    participants.splice(index, 1);
+                }
+                updateSelectedParticipants();
+                displayParticipants(); // 更新顯示的參加者名單
+            }
+        }
+
+        // 更新已選擇的參加者顯示
+        function updateSelectedParticipants() {
+            document.getElementById("selectedParticipants").innerText = 
+                `已選擇的參加者：\n${selectedParticipants.join('\n')}`;
+            document.getElementById("results").innerHTML = ""; // 清空結果
+        }
+
+        // 抽取參加者並隨機分配組別
         function drawLottery() {
-            const input = document.getElementById("nameInput").value;
-            const names = input.split('\n').map(name => name.trim()).filter(name => name);
-            
-            if (names.length > 10) {
-                document.getElementById("error").innerText = `錯誤：你輸入了 ${names.length} 個名字，最多只能輸入 10 個。`;
-                document.getElementById("group1").innerText = "";
-                document.getElementById("group2").innerText = "";
+            if (selectedParticipants.length === 0) {
+                alert("請選擇至少一位參加者！");
                 return;
-            } else {
-                document.getElementById("error").innerText = ""; // 清除錯誤消息
             }
 
             // 隨機分配到兩個組
-            const shuffledNames = names.sort(() => 0.5 - Math.random());
-            const midIndex = Math.ceil(shuffledNames.length / 2);
-            const group1 = shuffledNames.slice(0, midIndex);
-            const group2 = shuffledNames.slice(midIndex);
+            const shuffledParticipants = selectedParticipants.sort(() => 0.5 - Math.random());
+            const midIndex = Math.ceil(shuffledParticipants.length / 2);
+            const group1 = shuffledParticipants.slice(0, midIndex);
+            const group2 = shuffledParticipants.slice(midIndex);
 
-            document.getElementById("group1").innerText = `刀不鋒利馬太瘦組：\n${group1.join('\n')}`;
-            document.getElementById("group2").innerText = `我卢本伟没有开挂組：\n${group2.join('\n')}`;
+            document.getElementById("results").innerHTML = `
+                <div>刀不鋒利馬太瘦組：<br>${group1.join('<br>')}</div>
+                <div>我卢本伟没有开挂組：<br>${group2.join('<br>')}</div>
+            `;
         }
 
+        // 抽取地圖
         function drawSecondLottery() {
-            const secondInput = document.getElementById("secondInput").value;
-            const maps = secondInput.split('\n').map(map => map.trim()).filter(map => map);
-            
-            if (maps.length < 1) {
-                document.getElementById("secondResult").innerText = "請至少輸入一個地圖！";
-                return;
-            }
-
             const selectedMap = maps[Math.floor(Math.random() * maps.length)];
-
             document.getElementById("secondResult").innerText = `抽中的地圖：\n${selectedMap}`;
         }
+
+        // 初始化
+        displayParticipants();
+        document.getElementById("mapList").innerText = maps.join('\n');
     </script>
 </body>
 </html>
