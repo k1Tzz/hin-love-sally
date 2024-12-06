@@ -60,11 +60,15 @@
             font-weight: bold; /* Keep text bold */
         }
         .group1 {
-            color: purple; /* Change Group 1 color to purple */
+            color: rgb(37, 149, 253); /* Change Group 1 color to black */
             font-weight: bold; /* Make text bold */
         }
         .group2 {
-            color: blue; /* Change Group 2 color to blue */
+            color: rgb(170, 27, 253); /* Change Group 2 color to black */
+            font-weight: bold; /* Make text bold */
+        }
+        .mapResult {
+            color: black; /* Change map result color to black */
             font-weight: bold; /* Make text bold */
         }
         .participant:hover {
@@ -89,7 +93,7 @@
         <div class="second-draw" id="secondDrawSection">
             <h2>抽取地圖</h2>
             <button id="mapButton" onclick="drawSecondLottery()">抽取地圖</button>
-            <div id="secondResult"></div>
+            <div id="secondResult" class="mapResult"></div> <!-- Apply black bold style here -->
         </div>
     </div>
 
@@ -136,7 +140,7 @@
 
         function updateSelectedParticipants() {
             const selectedList = document.getElementById("selectedParticipants");
-            selectedList.innerHTML = "<strong>被選擇的齊心協力：</strong><br>"; // Updated heading
+            selectedList.innerHTML = "<strong>被齊心協力選擇中人類：</strong><br>"; // Updated heading
             selectedParticipants.forEach(participant => {
                 const span = document.createElement("span");
                 span.className = "selectedParticipant"; // Change class to apply red color
@@ -165,8 +169,8 @@
             // Update the result display with appropriate styles
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = `
-                <div class="group1">刀不鋒利馬太瘦組：<br>${group1.map(name => `<span class="group1">${name}</span>`).join('<br>')}</div>
-                <div class="group2">我卢本伟没有开挂組：<br>${group2.map(name => `<span class="group2">${name}</span>`).join('<br>')}</div>
+                <div class="mapResult">刀不鋒利馬太瘦組：<br>${group1.map(name => `<span class="group1">${name}</span>`).join('<br>')}</div>
+                <div class="mapResult">我卢本伟没有开挂組：<br>${group2.map(name => `<span class="group2">${name}</span>`).join('<br>')}</div>
             `;
         }
 
