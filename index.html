@@ -71,6 +71,10 @@
             color: black;
             font-weight: bold;
         }
+        .mapName {
+            color: green; /* Change map name color to green */
+            font-weight: bold; /* Make map name bold */
+        }
         .participant:hover {
             color: #555;
         }
@@ -183,7 +187,7 @@
 
         function drawSecondLottery() {
             const selectedMap = maps[Math.floor(Math.random() * maps.length)];
-            document.getElementById("secondResult").innerText = `抽中的地圖：\n${selectedMap}`;
+            document.getElementById("secondResult").innerHTML = `<span class="mapResult">抽中的地圖：</span><br><span class="mapName">${selectedMap}</span>`;
         }
 
         // Initialize
